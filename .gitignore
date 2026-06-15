@@ -9,3 +9,6 @@
 
 # macOS system files (keeps your repo clean of Mac junk)
 .DS_Store
+
+# Local Codex project instructions
+AGENTS.md
