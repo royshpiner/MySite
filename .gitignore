@@ -1,0 +1,11 @@
+# Generated site output
+/public/
+
+# Hugo generated resources (cache, resized images, CSS)
+/resources/_gen/
+
+# Hugo build lock file
+.hugo_build.lock
+
+# macOS system files (keeps your repo clean of Mac junk)
+.DS_Store
