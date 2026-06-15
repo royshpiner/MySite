@@ -33,9 +33,13 @@ jobs:
         with:
           hugo-version: 'latest'
           extended: true
-          
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
       - name: Build with Hugo
-        run: hugo --minify # This command converts the .md to .html in a /public folder
+        run: hugo --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -52,4 +56,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
