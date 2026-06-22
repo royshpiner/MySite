@@ -1,11 +1,5 @@
-import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, KeyboardEvent, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-
-type ChatMessage = {
-  id: number;
-  sender: 'assistant' | 'user';
-  text: string;
-};
 
 type AskResponse = {
   answer?: string;
@@ -24,25 +18,8 @@ const initialMessage =
 function ChatApp({ apiUrl }: { apiUrl: string }) {
   const [question, setQuestion] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    { id: 1, sender: 'assistant', text: initialMessage },
-  ]);
-  const nextId = useRef(2);
+  const [latestAnswer, setLatestAnswer] = useState(initialMessage);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const messagesRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (messagesRef.current) {
-      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
-    }
-  }, [messages]);
-
-  const addMessage = (sender: ChatMessage['sender'], text: string) => {
-    setMessages((currentMessages) => [
-      ...currentMessages,
-      { id: nextId.current++, sender, text },
-    ]);
-  };
 
   const submitQuestion = async () => {
     const trimmedQuestion = question.trim();
@@ -51,9 +28,9 @@ function ChatApp({ apiUrl }: { apiUrl: string }) {
       return;
     }
 
-    addMessage('user', trimmedQuestion);
     setQuestion('');
     setIsLoading(true);
+    setLatestAnswer('Getting your answer...');
 
     try {
       const response = await fetch(apiUrl, {
@@ -70,10 +47,9 @@ function ChatApp({ apiUrl }: { apiUrl: string }) {
         throw new Error(data.error || 'The chat API returned an error.');
       }
 
-      addMessage('assistant', data.answer || 'I do not know.');
+      setLatestAnswer(data.answer || 'I do not know.');
     } catch (error) {
-      addMessage(
-        'assistant',
+      setLatestAnswer(
         error instanceof Error
           ? `The chat is unavailable right now: ${error.message}`
           : 'The chat is unavailable right now. Please try again later.'
@@ -145,15 +121,10 @@ function ChatApp({ apiUrl }: { apiUrl: string }) {
           ))}
         </p>
 
-        <div className="site-chat__messages" aria-live="polite" ref={messagesRef}>
-          {messages.map((message) => (
-            <div
-              className={`site-chat__message site-chat__message--${message.sender}`}
-              key={message.id}
-            >
-              {message.text}
-            </div>
-          ))}
+        <div className="site-chat__messages" aria-live="polite">
+          <div className="site-chat__message site-chat__message--assistant">
+            {latestAnswer}
+          </div>
         </div>
       </div>
     </section>
