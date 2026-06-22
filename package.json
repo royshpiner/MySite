@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "npm run build:chat",
-    "build:chat": "esbuild src/site-chat.tsx --bundle --format=iife --outfile=static/js/site-chat.js --jsx=automatic --minify",
+    "build:chat": "mkdir -p static/js && esbuild src/site-chat.tsx --bundle --format=iife --outfile=static/js/site-chat.js --jsx=automatic --minify",
     "check": "tsc --noEmit"
   },
   "dependencies": {

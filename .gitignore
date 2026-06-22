@@ -13,5 +13,8 @@
 # JavaScript dependencies
 node_modules/
 
+# Generated browser bundle. Source lives in src/site-chat.tsx.
+static/js/*.js
+
 # Local Codex project instructions
 AGENTS.md
