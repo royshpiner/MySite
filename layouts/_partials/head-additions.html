@@ -1,0 +1,4 @@
+{{ with .Site.Params.ragApiURL }}
+  <link rel="stylesheet" href="{{ "css/site-chat.css" | relURL }}">
+  <script defer src="{{ "js/site-chat.js" | relURL }}" data-rag-api-url="{{ . }}"></script>
+{{ end }}
