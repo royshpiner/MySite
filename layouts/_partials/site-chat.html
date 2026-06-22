@@ -1,29 +1,7 @@
-<section class="site-chat" data-site-chat="true" aria-label="Ask about Roy">
-  <div class="site-chat__inner">
-    <h2 class="site-chat__title">Ask about Roy</h2>
-
-    <form class="site-chat__form">
-      <textarea
-        class="site-chat__input"
-        name="question"
-        rows="2"
-        maxlength="1000"
-        placeholder="Ask anything about Roy"
-      ></textarea>
-      <button class="site-chat__send" type="submit" aria-label="Send question">
-        Send
-      </button>
-    </form>
-
-    <p class="site-chat__suggestions">
-      Suggestions:
-      <button type="button" class="site-chat__suggestion">What do you know about Roy?</button>
-      <span aria-hidden="true">•</span>
-      <button type="button" class="site-chat__suggestion">What projects has Roy built?</button>
-      <span aria-hidden="true">•</span>
-      <button type="button" class="site-chat__suggestion">What is Roy studying?</button>
-    </p>
-
-    <div class="site-chat__messages" aria-live="polite"></div>
-  </div>
-</section>
+{{ with .Site.Params.ragApiURL }}
+  <section
+    id="site-chat-root"
+    data-rag-api-url="{{ . }}"
+    aria-label="Ask about Roy"
+  ></section>
+{{ end }}
