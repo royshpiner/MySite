@@ -96,7 +96,7 @@
         body: JSON.stringify({ question }),
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
         throw new Error(data.error || 'The chat API returned an error.');
@@ -105,7 +105,9 @@
       addMessage(data.answer || 'I do not know.', 'assistant');
     } catch (error) {
       addMessage(
-        'The chat is unavailable right now. Please try again later.',
+        error instanceof Error
+          ? `The chat is unavailable right now: ${error.message}`
+          : 'The chat is unavailable right now. Please try again later.',
         'assistant'
       );
     } finally {
