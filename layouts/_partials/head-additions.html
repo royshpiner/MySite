@@ -1,4 +1,11 @@
 {{ with .Site.Params.ragApiURL }}
-  <link rel="stylesheet" href="{{ "css/site-chat.css" | relURL }}">
-  <script defer src="{{ "js/site-chat.js" | relURL }}" data-rag-api-url="{{ . }}"></script>
+  {{- $assetVersion := now.Unix -}}
+  {{- with site.Params.chatAssetVersion -}}
+    {{- $assetVersion = . -}}
+  {{- end -}}
+  {{- with site.Params.gitCommit -}}
+    {{- $assetVersion = . -}}
+  {{- end -}}
+  <link rel="stylesheet" href="{{ "css/site-chat.css" | relURL }}?v={{ $assetVersion }}">
+  <script defer src="{{ "js/site-chat.js" | relURL }}?v={{ $assetVersion }}" data-rag-api-url="{{ . }}"></script>
 {{ end }}
