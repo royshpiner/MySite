@@ -13,13 +13,32 @@ const suggestions = [
 ];
 
 const initialMessage =
-  'Ask a question and I will answer through Gemini. The personal knowledge base comes next, so for now this is only a live chat test.';
+  'Ask a question and I will answer using Roy\'s project knowledge base.';
+
+const fallbackMessage =
+  'The AI chat is temporarily unavailable because the API failed or the model has no tokens/quota left. You can still view my resume below.';
+
+const isFallbackAnswer = (answer: string) => {
+  const normalizedAnswer = answer.toLowerCase();
+
+  return (
+    normalizedAnswer.includes('temporarily unavailable') ||
+    normalizedAnswer.includes('rate-limited') ||
+    normalizedAnswer.includes('quota') ||
+    normalizedAnswer.includes('high demand')
+  );
+};
 
 function ChatApp({ apiUrl }: { apiUrl: string }) {
   const [question, setQuestion] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [latestAnswer, setLatestAnswer] = useState(initialMessage);
+  const [showResumeFallback, setShowResumeFallback] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const resumeUrl = new URL(
+    'files/roy-shpiner-resume.pdf',
+    document.baseURI
+  ).toString();
 
   const submitQuestion = async () => {
     const trimmedQuestion = question.trim();
@@ -30,6 +49,7 @@ function ChatApp({ apiUrl }: { apiUrl: string }) {
 
     setQuestion('');
     setIsLoading(true);
+    setShowResumeFallback(false);
     setLatestAnswer('Getting your answer...');
 
     try {
@@ -47,13 +67,18 @@ function ChatApp({ apiUrl }: { apiUrl: string }) {
         throw new Error(data.error || 'The chat API returned an error.');
       }
 
-      setLatestAnswer(data.answer || 'I do not know.');
+      const answer = data.answer || 'I do not know.';
+
+      if (isFallbackAnswer(answer)) {
+        setLatestAnswer(fallbackMessage);
+        setShowResumeFallback(true);
+        return;
+      }
+
+      setLatestAnswer(answer);
     } catch (error) {
-      setLatestAnswer(
-        error instanceof Error
-          ? `The chat is unavailable right now: ${error.message}`
-          : 'The chat is unavailable right now. Please try again later.'
-      );
+      setLatestAnswer(fallbackMessage);
+      setShowResumeFallback(true);
     } finally {
       setIsLoading(false);
       inputRef.current?.focus();
@@ -125,6 +150,25 @@ function ChatApp({ apiUrl }: { apiUrl: string }) {
           <div className="site-chat__message site-chat__message--assistant">
             {latestAnswer}
           </div>
+          {showResumeFallback && (
+            <div className="site-chat__resume">
+              <div className="site-chat__resume-actions">
+                <a
+                  className="site-chat__resume-link"
+                  href={resumeUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Open Roy's resume
+                </a>
+              </div>
+              <iframe
+                className="site-chat__resume-frame"
+                src={resumeUrl}
+                title="Roy Shpiner resume"
+              />
+            </div>
+          )}
         </div>
       </div>
     </section>

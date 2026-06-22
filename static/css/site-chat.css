@@ -104,6 +104,45 @@
   display: none;
 }
 
+.site-chat__resume {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.site-chat__resume-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.site-chat__resume-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  border-radius: 0.45rem;
+  background: #111827;
+  color: #ffffff;
+  font-weight: 700;
+  padding: 0.7rem 1rem;
+  text-decoration: none;
+}
+
+.site-chat__resume-link:hover,
+.site-chat__resume-link:focus {
+  background: #374151;
+  color: #ffffff;
+}
+
+.site-chat__resume-frame {
+  width: 100%;
+  height: min(72vh, 42rem);
+  border: 1px solid #d1d5db;
+  border-radius: 0.45rem;
+  background: #ffffff;
+}
+
 .site-chat__send:disabled,
 .site-chat__input:disabled {
   cursor: not-allowed;
